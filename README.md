@@ -1,1 +1,1 @@
-# BioMed-LinkedData-tutorial
+# BioLinkedData-HandsOn
