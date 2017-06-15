@@ -164,7 +164,7 @@ class: bottom, center
 ## .red[RDF] to represent Linked Data
 
 ---
-
+[http://dbpedia.org/sparql](http://dbpedia.org/sparql)
 ```
 SELECT DISTINCT ?gene ?entrez_id ?uniprot_id WHERE {
    ?gene dbo:abstract ?abstract
@@ -173,8 +173,11 @@ SELECT DISTINCT ?gene ?entrez_id ?uniprot_id WHERE {
    OPTIONAL {?gene dbo:uniprot ?uniprot_id}
 }
 ```
+
 --
-.center[![:scale 65%](fig/sparql-results.png)]
+
+.center[![:scale 60%](fig/sparql-results.png)]
+
 
 --
 ## .bottom[.center[.red[SPARQL] to query linked data]]
@@ -211,7 +214,7 @@ class: middle, center
 
 ---
 class: middle, center
-# RDF hands-on
+# .red[RDF] hands-on
 
 ---
 # RDF language to link data
@@ -225,7 +228,7 @@ class: middle, center
 
 ## .green[Example]
 Turtle syntax :
-```Turtle
+```N3
 <http://HG37> rdf:type <http://human_genome> .
 <http://sample1> <http://is_aligned_with > <http://HG37> .
 ```
@@ -239,15 +242,64 @@ Turtle syntax :
   -  the mother of John is Mary,
   -  Mickael is the son of Mark,
   -  John and Mark are cousins.
+4. Generate a graphical representation of the RDF graph.
 
+---
+# RDF language to link data
+## .green[Answers]
 --
 
-## .green[Answer]
+```N3
+@prefix family: <http://family/ns#> .
+
+<http://John> family:has_mother <http://Mary> .
+<http://Mickael> family:has_father <http://Mark> .
+<http://Mark> family:has_sister <http://Mary> .
+```
+
+--
+.center[![:scale 60%](fig/family.png)]
 
 ---
 class: middle, center
-# SPARQL hands-on
+# A quick preview on .red[ontologies]
 
+---
+# What is an ontology ?  
+## .red[Definition]
+
+## .green[Ontology VS Controlled vocabulary]
+
+---
+# Browsing a Life-Science ontology  
+## .blue[Hands-on]
+1. In BioPortal, find an ontology describing mitral valve phenotypes.
+1. List all sub-classes precising the different kinds of *"Mitral stenosis"*.
+1. List class mappings for *"Mitral valce prolapse"*
+1. In the RadLex ontology, find synonyms for *"Mitral valce prolapse"*
+1. Find the related genes symbols (from OMIM)
+
+---
+background-image: url(fig/HPO.png)
+
+---
+background-image: url(fig/RadLex.png)
+
+---
+background-image: url(fig/omim.png)
+
+---
+# Take-away message
+
+### sdf sdkjfhsd k
+
+###
+
+---
+class: middle, center
+# .red[SPARQL] hands-on
+
+---
 
 ---
 # Further reading
