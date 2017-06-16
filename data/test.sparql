@@ -1,0 +1,54 @@
+##############
+SELECT DISTINCT ?pathway ?pubmed
+WHERE {
+      ?pubmed a       wp:PublicationReference .
+      ?pubmed dcterms:isPartOf ?pathway .
+
+      FILTER regex(str(?pubmed), "14769483$")
+}
+ORDER BY ?pathway
+
+##############
+DESCRIBE <http://identifiers.org/pubmed/14769483>
+
+##############
+CONSTRUCT {
+        ?p1 <is_related_to> ?p2
+} WHERE {
+      ?p1 a       wp:PublicationReference .
+      ?p1 dcterms:isPartOf ?pathway .
+
+      ?p2 a       wp:PublicationReference .
+      ?pathway dcterms:references ?p2
+} LIMIT 1000
+
+##############
+CONSTRUCT {
+        ?auth_p1 <is_related_to> ?auth_p2
+} WHERE {
+      ?p1 a       wp:PublicationReference .
+      ?p1 dcterms:isPartOf ?pathway .
+
+      ?p2 a       wp:PublicationReference .
+      ?pathway dcterms:references ?p2 .
+
+      SERVICE <http://linkedlifedata.com/sparql> {
+              ?p1 <http://www.biopax.org/release/biopax-level3.owl#author> ?auth_p1 .
+              ?p2 <http://www.biopax.org/release/biopax-level3.owl#author> ?auth_p2 .
+              BIND (replace(?auth_p1, " ", "_") as ?auth_p1_label)
+              BIND (URI(CONCAT("http://pubmed/",?auth_p1_label)) as ?auth_p1_uri)
+              BIND (replace(?auth_p2, " ", "_") as ?auth_p2_label)
+              BIND (URI(CONCAT("http://pubmed/",?auth_p2_label)) as ?auth_p2_uri)
+      }
+} LIMIT 1000
+
+
+################
+PREFIX pubmed: <http://linkedlifedata.com/resource/pubmed/>
+
+Select * where {
+        BIND (URI("http://identifiers.org/pubmed/14769483") as ?p1)
+	?p1 <http://www.biopax.org/release/biopax-level3.owl#author> ?auth_p1
+	BIND (replace(?auth_p1, " ", "_") as ?authLabel)
+        BIND (URI(CONCAT("http://pubmed/",?authLabel)) as ?authURI)
+}

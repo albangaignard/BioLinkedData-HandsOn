@@ -42,12 +42,23 @@
       .left-column h2:last-of-type, .left-column h3:last-child {
           color: #87A558;
       }
-
       .right-column {
         width: 60%;
         float: right;
         padding-top: 1em;
       }
+
+      .split-left {
+        width: 47%;
+        float: left;
+      }
+      .split-right {
+        width: 50%;
+        float: right;
+      }
+
+      .split-left .remark-code { font-family: 'Ubuntu Mono'; font-size: 70%; }
+      .split-right .remark-code { font-family: 'Ubuntu Mono'; font-size: 70%; }
 
       .remark-slide-content {
               background-position: center;
@@ -63,11 +74,16 @@
 
 class: center, middle
 count: false
-# Linked Data for Life Sciences, hands-on
+# Linked Data for Life Sciences, <br> .blue[hands-on]
 <br>
 ### 19 June 2017
 <br>
 ### Marie Lefebvre, Alban Gaignard
+### .red[TODO]
+.red[ WEB illustration ; sem web 2-col illus ;
+URIs / Literals ;
+Ontology definition ;
+Biblio Resources]
 
 ---
 class: center, middle
@@ -165,7 +181,7 @@ class: bottom, center
 
 ---
 [http://dbpedia.org/sparql](http://dbpedia.org/sparql)
-```
+```SPARQL
 SELECT DISTINCT ?gene ?entrez_id ?uniprot_id WHERE {
    ?gene dbo:abstract ?abstract
    FILTER (regex(?abstract, "toxin"))
@@ -238,7 +254,7 @@ Turtle syntax :
 ## .blue[Hands-on]
 1. Go to http://www.easyrdf.org/converter
 2. Consider the following RDF properties `family:has_mother`, `family:has_father`, `family:has_sister`
-3. Represent in RDF the following family:
+3. Represent with RDF triples the following family:
   -  the mother of John is Mary,
   -  Mickael is the son of Mark,
   -  John and Mark are cousins.
@@ -249,16 +265,16 @@ Turtle syntax :
 ## .green[Answers]
 --
 
-```N3
-@prefix family: <http://family/ns#> .
+```ruby
+@prefix ns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-<http://John> family:has_mother <http://Mary> .
-<http://Mickael> family:has_father <http://Mark> .
-<http://Mark> family:has_sister <http://Mary> .
+<http://John> ns:has_mother <http://Mary> .
+<http://Mickael> ns:has_father <http://Mark> .
+<http://Mark> ns:has_sister <http://Mary> .
 ```
 
 --
-.center[![:scale 60%](fig/family.png)]
+.center[![:scale 50%](fig/family.png)]
 
 ---
 class: middle, center
@@ -268,12 +284,12 @@ class: middle, center
 # What is an ontology ?  
 ## .red[Definition]
 
-## .green[Ontology VS Controlled vocabulary]
+## .green[Ontologies VS Controlled vocabularies]
 
 ---
 # Browsing a Life-Science ontology  
 ## .blue[Hands-on]
-1. In BioPortal, find an ontology describing mitral valve phenotypes.
+1. In [BioPortal](https://bioportal.bioontology.org), find an ontology describing mitral valve phenotypes.
 1. List all sub-classes precising the different kinds of *"Mitral stenosis"*.
 1. List class mappings for *"Mitral valce prolapse"*
 1. In the RadLex ontology, find synonyms for *"Mitral valce prolapse"*
@@ -289,7 +305,7 @@ background-image: url(fig/RadLex.png)
 background-image: url(fig/omim.png)
 
 ---
-# Take-away message
+# Recap
 
 ### sdf sdkjfhsd k
 
@@ -300,11 +316,308 @@ class: middle, center
 # .red[SPARQL] hands-on
 
 ---
+# SPARQL to query RDF graphs
+SPARQL is the standards languages to query multiple data sources expressed in RDF. The principle consists in defining a .red[graph pattern] to be matched against an RDF graph.
+
+--
+
+## .red[Definition]
+.red[Triple Patterns] (TPs) are like RDF triples except that each of the subject, predicate and object may be a .red[variable]. Variables are prefixed with a .green[**?**].
+
+--
+## .green[Example]
+```ruby
+?x <is_a_variant_of> <RAC1>
+```
+
+---
+# SPARQL to query RDF graphs
+## .green[Sample triple pattern matching]
+Triple pattern:
+```ruby
+?x <is_a_variant_of> <RAC1>
+```
+.split-left[
+Sample triples:
+```ruby
+<SNP:123> <is_a_variant_of> <NEMO> .
+<SNP:rs527330002> <is_a_variant_of> <RAC1> .
+<SNP:rs527330002> <refers_to_organism>
+        <http://www.uniprot.org/taxonomy/9606> .
+<SNP:rs61753123> <is_a_variant_of> <RAC1> .
+```
+]
+
+--
+
+.split-right[
+Bindings of variable ?x:
+```ruby
+?x = <SNP:rs527330002>
+?x = <SNP:rs61753123>
+```
+]
+
+---
+# SPARQL to query RDF graphs
+## .red[Definition]
+.red[Basic Graph Patterns] (BGPs) consist in a set of triple patterns to be matched on an RDF graph.
+
+--
+
+## .green[Example]
+```ruby
+?x <is_a_variant_of> <RAC1> .
+?x <is_a_risk_factor_for> ?z
+```
+
+--
+.center[![:scale 60%](fig/bgp.png)]
+
+
+---
+# 4 Types of SPARQL queries
+- .red[SELECT] : returns the variables values (i.e. bound variables) for each graph pattern match ;
+- .red[CONSTRUCT] : returns an RDF graph constructed by substituting variables in a set of triple patterns ;
+- .red[ASK] : returns a boolean (true/false) indicating whether a query pattern matches or not ;
+- .red[DESCRIBE] : returns an RDF graph that describes the resources found (resources neighborhood).
+
+<br>
+<br>
+Additional features: Optional BGPs, union, filters, aggregate functions, negation, service, *etc.*
+
+---
+# Anatomy of a SPARQL query
+
+.center[![:scale 95%](fig/anat.png)]
+
+.footnote[*http://www.wikipathways.org/index.php/Help:WikiPathways_Sparql_queries*]
+
+
+---
+# Querying with SPARQL
+## Shortcuts for common vocabularies
+```ruby
+PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+```
+
+## SPARQL endpoint
+http://sparql.wikipathways.org
+
+---
+## .blue[Q1: show the graph neighborhood of a given pathway]
+
+Pathway URI:
+
+`http://identifiers.org/wikipathways/WP43_r84102`
+
+--
+
+## .green[Answer]
+```ruby
+PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+DESCRIBE <http://identifiers.org/wikipathways/WP43_r84102>
+```
+
+--
+
+## .blue[Q1': describe an involved gene]
+
+
+---
+## .blue[Q2: List genes entries for "CYP"]
+Have a look on the vocabulary : https://vocabularies.wikipathways.org/wp
+
+--
+
+## .green[Answer]
+```ruby
+SELECT ?gene ?label WHERE {
+    ?gene a wp:GeneProduct .
+    ?gene rdfs:label ?label .
+
+    FILTER regex(str(?label), "CYP").
+}
+```
+
+---
+## .blue[Q3: List pathways involving "CYP" genes]
+
+--
+
+## .green[Answer]
+```ruby
+SELECT DISTINCT ?pathway ?label WHERE {
+    ?geneProduct a wp:GeneProduct .
+    ?geneProduct rdfs:label ?label .
+    FILTER regex(str(?label), "CYP").
+
+    ?geneProduct dcterms:isPartOf ?pathway .
+    ?pathway a wp:Pathway .
+}
+```
+
+---
+## .blue[Q4: From the previous query, show the EntrezGene IDs]
+
+--
+
+## .green[Naive answer]
+Add the following triple pattern in the previous SPARQL query
+```ruby
+?geneProduct wp:bdbEntrezGene ?idEG .
+```
+
+--
+
+## .green[Better answer]
+Use OPTIONAL to also get results for unbound variables !
+```ruby
+OPTIONAL {?geneProduct wp:bdbEntrezGene ?idEG}
+```
+**`AND`** &rarr; **.** ; **`OR`** &rarr; **`OPTIONAL`**
+
+.blue[To identify missing values:] `FILTER (! bound(?idEG))`
+
+---
+## .blue[Q5: Construct a simple pubmed network from shared pathways]
+.red[Idea:] some pubmed articles could be associated together because they refer to the same pathway. Use the **`LIMIT`** keyword to have **quick** but **uncomplete** results.
+
+--
+
+## .green[Answer (part1)]
+Query pattern:
+```ruby
+?p1 a       wp:PublicationReference .
+?p1 dcterms:isPartOf ?pathway .
+
+?p2 a       wp:PublicationReference .
+?pathway dcterms:references ?p2
+```
+
+---
+## .green[Answer (part2)]
+Construct clause:
+```ruby
+CONSTRUCT {
+        ?p1 <is_related_to> ?p2
+} WHERE { ... }
+```
+
+--
+
+## .green[Query results]
+```ruby
+<http://identifiers.org/pubmed/3291856>        <is_related_to>
+        <http://identifiers.org/pubmed/22956916> ,
+        <http://identifiers.org/pubmed/6051659> ,
+        <http://identifiers.org/pubmed/6421238> .
+<http://identifiers.org/pubmed/10440375>        <is_related_to>
+        <http://identifiers.org/pubmed/15217342> ,
+        <http://identifiers.org/pubmed/17880890> ,
+        <http://identifiers.org/pubmed/16865347> ,
+        <http://identifiers.org/pubmed/16819626> .
+...
+```
+
+---
+background-image: url(fig/pubmedCommunities.png)
+
+---
+## .blue[Q6: a more realistic network ... with paper authors]
+.red[Idea:] Build a "social" network of scientists who published on the same pathway.
+### .red[Issues]
+- Authors are not described in WikiPathway
+- Authors are represented with Literals (Strings) in PubMed
+  - two literals can not be linked with RDF properties
+
+--
+
+### .green[Technical hints]
+- **Federated queries** to submit a sub-query to the PubMed datasource (hosted at http://linkedlifedata.com/sparql)
+- Use SPARQL functions for data transformation:
+  - `replace(...)`
+  - `concat(...)`
+  - `IRI(...)`
+
+---
+## .green[Advanced WikiPathway query]
+```ruby
+CONSTRUCT {
+      ?auth_p1_uri <is_related_to> ?auth_p2_uri
+} WHERE {
+      ?p1 a                wp:PublicationReference .
+      ?p1 dcterms:isPartOf ?pathway .
+
+      ?p2 a                wp:PublicationReference .
+      ?pathway dcterms:references ?p2 .
+
+      SERVICE <http://linkedlifedata.com/sparql> {
+         ?p1 <http://www.biopax.org/release/biopax-level3.owl#author> ?auth_p1 .
+         ?p2 <http://www.biopax.org/release/biopax-level3.owl#author> ?auth_p2 .
+      }
+
+      BIND (replace(?auth_p1, " ", "_") as ?auth_p1_label)
+      BIND (IRI(CONCAT("http://pubmed/",?auth_p1_label)) as ?auth_p1_uri)
+
+      BIND (replace(?auth_p2, " ", "_") as ?auth_p2_label)
+      BIND (IRI(CONCAT("http://pubmed/",?auth_p2_label)) as ?auth_p2_uri)
+} LIMIT 1000
+```
+
+---
+background-image: url(fig/authorsCommunities.png)
+
+---
+class: middle, center
+# Almost .green[the end]
+
+---
+# Overall recap
+
+## .green[Linked Data, ontologies, **why** ?]
+  - establish data **bridges**
+  - "artificial intelligence"
+  - something in the middle between .blue[machines] and .red[humans] ...
+
+--
+
+## .green[Linked Data, ontologies, **how** ?]
+  - Representing data in RDF graphs (Turtle)
+  - Navigating in Life Science ontologies
+  - Basic SPARQL querying
+
+---
+# .blue[Linked Data, ontologies, next episode ?]
+  - RDFization of your data
+  - Hosting your data through a SPARQL endpoint
+  - Advanced SPARQL querying (property path expressions, nested queries, aggregates)
+  - Designing controlled vocabularies
+  - Designing formal ontologies
+  - Logical reasoning (Inference rules, RDFS entailments, OWL entailments)
+  - etc.
+
+---
+class: middle, center
+# Further .green[reading] and .blue[coding]
+
 
 ---
 # Further reading
+SPARQL query language
+-  https://www.w3.org/TR/sparql11-query/
+-  https://www.slideshare.net/LeeFeigenbaum/sparql-cheat-sheet
+
+RDF data  
 - RDF primer :
 - RDF primer :
+
+
 - Simon Jupp :
 - Olivier Dameron :
 
