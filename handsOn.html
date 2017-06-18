@@ -52,6 +52,7 @@
         width: 47%;
         float: left;
       }
+
       .split-right {
         width: 50%;
         float: right;
@@ -79,11 +80,6 @@ count: false
 ### 19 June 2017
 <br>
 ### Marie Lefebvre, Alban Gaignard
-### .red[TODO]
-.red[ WEB illustration ; sem web 2-col illus ;
-URIs / Literals ;
-Ontology definition ;
-Biblio Resources]
 
 ---
 class: center, middle
@@ -157,11 +153,12 @@ A distributed system of **.red[Hypertext]** documents based on **.red[URL]**, **
 an infrastructure for exchanging data, and building "intelligent" applications <br>
 
 --
+
 .center[![:scale 50%](fig/seq.png) &nbsp; ![:scale 30%](fig/mri.png)]
 
 --
-count: false
-## .center[make .red[machines] and .green[humans] better interpret and exchange diverse data]
+
+ ## .center[make .red[machines] and .green[humans] better interpret and exchange diverse data]
 
 ---
 class: middle, center
@@ -246,7 +243,8 @@ class: middle, center
 Turtle syntax :
 ```N3
 <http://HG37> rdf:type <http://human_genome> .
-<http://sample1> <http://is_aligned_with > <http://HG37> .
+<http://sample1> <http://is_aligned_with> <http://HG37> .
+<http://sample1> rdfs:comment "Sample 1 from Study X [...]"^^xsd:string .
 ```
 
 ---
@@ -284,7 +282,27 @@ class: middle, center
 # What is an ontology ?  
 ## .red[Definition]
 
-## .green[Ontologies VS Controlled vocabularies]
+*"an explicit specification of a conceptualization" (Gruber, 1993)*
+
+*“a formal specification of a shared conceptualization” (Borst, 1997)*
+
+--
+
+.split-left[
+## .green[Many kinds]
+- Controled vocabulary
+- Thesaurus
+- Formal ontologies
+]
+
+--
+
+.split-right[
+## .green[They are made of]
+- A set of concepts (shared vocabulary)
+- Their relationships
+- A set of logical constraints and rules
+]
 
 ---
 # Browsing a Life-Science ontology  
@@ -304,12 +322,6 @@ background-image: url(fig/RadLex.png)
 ---
 background-image: url(fig/omim.png)
 
----
-# Recap
-
-### sdf sdkjfhsd k
-
-###
 
 ---
 class: middle, center
@@ -578,7 +590,7 @@ class: middle, center
 # Almost .green[the end]
 
 ---
-# Overall recap
+# Recap
 
 ## .green[Linked Data, ontologies, **why** ?]
   - establish data **bridges**
@@ -608,19 +620,30 @@ class: middle, center
 
 
 ---
-# Further reading
-SPARQL query language
+# .green[Reading]
+RDF + SPARQL
+-  https://www.w3.org/TR/rdf11-primer/
 -  https://www.w3.org/TR/sparql11-query/
 -  https://www.slideshare.net/LeeFeigenbaum/sparql-cheat-sheet
 
-RDF data  
-- RDF primer :
-- RDF primer :
+In life sciences and bioinformatics
+- http://www.biomedbridges.eu/trainings/knowledge-exchange-workshop-resource-description-framework-rdf
 
+# .blue[Coding]
+- Java : [Apache Jena](https://jena.apache.org)
+- Python : [RDFlib](https://pypi.python.org/pypi/rdflib)
 
-- Simon Jupp :
-- Olivier Dameron :
+---
+class: middle, center
+# Questions ?
 
+<br>
+<br>
+<br>
+
+[marie.lefebvre@univ-nantes.fr](mailto:marie.lefebvre@univ-nantes.fr)
+
+[alban.gaignard@univ-nantes.fr](mailto:alban.gaignard@univ-nantes.fr)
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js" type="text/javascript">
